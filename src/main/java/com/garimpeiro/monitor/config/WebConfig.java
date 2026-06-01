@@ -9,8 +9,8 @@ public class WebConfig implements WebMvcConfigurer{
 
     @Override
     public void addCorsMappings(CorsRegistry registry){
-        registry.addMapping("/**") // Libera todas as rotas da nossa API (itens, categorias, etc)
-                .allowedOrigins("*") // Libera o acesso de QUALQUER site ou porta (ideal para desenvolvimento)
+        registry.addMapping("/**") // Libera todas as rotas da API 
+                .allowedOrigins("*") // Libera o acesso de QUALQUER site ou porta 
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
                 .allowedHeaders("*"); // Libera todos os tipos de cabeçalhos
     }
