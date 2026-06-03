@@ -1,12 +1,15 @@
 package com.garimpeiro.monitor.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-import java.math.BigDecimal;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity // Vira a tabela "item" no banco de dados
 public class Item {
@@ -15,11 +18,21 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O título do item não pode ficar em branco!")
     private String titulo; // Nome do item, ex: "Re:Zero Volume 6"
+
+    @NotBlank(message = "O URL não pode ficar em branco!")
     private String urlProduto; // O link da Amazon que o Python vai ler
+
+    @PositiveOrZero(message = "O preço atual não pode ser negativo!")
     private BigDecimal precoAtual; // Preço que está na Amazon hoje
+
+    @PositiveOrZero(message = "O preço alvo não pode ser negativo!")
     private BigDecimal precoAlvo; // Quanto você quer pagar (Sua Meta!)
+
+    @NotBlank(message = "A prioridade não pode ficar em branco!")
     private String prioridade; // "Alta", "Média" ou "Baixa"
+    
     private boolean possuo; // Checkbox para marcar se você já comprou
 
     @ManyToOne // REGRA DE OURO: Muitos itens pertencem a UMA coleção (Muitos para Um)

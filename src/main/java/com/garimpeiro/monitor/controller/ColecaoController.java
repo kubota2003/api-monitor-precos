@@ -1,28 +1,56 @@
 package com.garimpeiro.monitor.controller;
 
-import com.garimpeiro.monitor.model.Colecao;
-import com.garimpeiro.monitor.repository.ColecaoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
-@RestController // Coloca o "uniforme de garçom" na classe. Ela agora atende requisições Web.
-@RequestMapping("/colecoes") // Define o endereço. Tudo aqui será acessado via /colecoes
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.garimpeiro.monitor.model.Colecao;
+import com.garimpeiro.monitor.service.ColecaoService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/colecoes") // Define o endpoint base para as operações de coleção
 public class ColecaoController {
 
-    @Autowired // MÁGICA: Conecta o garçom com o cozinheiro automaticamente
-    private ColecaoRepository repository;
+    @Autowired
+    private ColecaoService service;
 
-    // Rota para LER dados (Equivale a pedir para ver o cardápio)
-    @GetMapping
-    public List<Colecao> listarTodas() {
-        return repository.findAll(); // Vai no banco e traz todas as pastas salvas
+    // Endpoint para persistir uma nova entidade Colecao
+    @PostMapping
+    public Colecao cadastrar(@Valid @RequestBody Colecao novaColecao) {
+        return service.cadastrarNovaColecao(novaColecao);
     }
 
-    // Rota para SALVAR dados (Equivale a fazer um novo pedido)
-    @PostMapping
-    public Colecao criarNova(@RequestBody Colecao novaColecao) {
-        return repository.save(novaColecao); // Salva a nova pasta no banco de dados
+    // Endpoint para atualizar os dados de uma entidade Colecao existente pelo ID
+    @PutMapping("/{id}")
+    public Colecao atualizar(@PathVariable Long id, @Valid @RequestBody Colecao colecaoAtualizada) {
+        return service.atualizarColecao(id, colecaoAtualizada);
+    }
+
+    // Endpoint para listar todos os registros de Colecao no banco de dados
+    @GetMapping
+    public List<Colecao> listarTodas() {
+        return service.listarTodas();
+    }
+
+    // Endpoint para buscar uma entidade Colecao específica pelo ID
+    @GetMapping("/{id}")
+    public Colecao buscarPorId(@PathVariable Long id) {
+        return service.buscarPorId(id);
+    }
+
+    // Endpoint para remover uma entidade Colecao do banco de dados pelo ID
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id) {
+        service.deletarColecao(id);
     }
 }
